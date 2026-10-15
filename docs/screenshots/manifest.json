@@ -1,0 +1,98 @@
+[
+  {
+    "file": "01-uygulamalar-gece.png",
+    "theme": "dark",
+    "title": "Kurulu ve kurulu olmayan uygulamalar",
+    "caption": "Kurulu uygulamalar tek tıkla açılır, kurulu olmayanlar tek tıkla kurulur"
+  },
+  {
+    "file": "02-indirme-gece.png",
+    "theme": "dark",
+    "title": "İndirme ilerlemesi",
+    "caption": "Simgenin üzerinde dairesel ilerleme (yüzde, MB); birden çok indirme aynı anda"
+  },
+  {
+    "file": "03-guncelleme-gece.png",
+    "theme": "dark",
+    "title": "Güncelleme rozeti",
+    "caption": "Yeni sürümü olan uygulamada “Güncelleme var” rozeti ve tek tıkla Güncelle"
+  },
+  {
+    "file": "04-tepsi-gece.png",
+    "theme": "dark",
+    "title": "Tepsi menüsü",
+    "caption": "Tepsi simgesine tek tık: kurulu uygulamalar listelenir, tıklayınca açılır"
+  },
+  {
+    "file": "05-ayarlar-genel-gece.png",
+    "theme": "dark",
+    "title": "Ayarlar › Genel",
+    "caption": "Dil, Gece/Gündüz/Sistem teması, Windows ile başlat, tepsi ve güncellemeler"
+  },
+  {
+    "file": "06-ayarlar-hesap-gece.png",
+    "theme": "dark",
+    "title": "Ayarlar › Hesap",
+    "caption": "Tek giriş: bir kez giriş yapın; çıkış tüm Mastertool uygulamalarından çıkarır"
+  },
+  {
+    "file": "07-ayarlar-depolama-gece.png",
+    "theme": "dark",
+    "title": "Ayarlar › Depolama",
+    "caption": "İndirilen kurulum dosyaları; kurulumdan sonra kendiliğinden silinir"
+  },
+  {
+    "file": "08-giris-gece.png",
+    "theme": "dark",
+    "title": "Tek giriş",
+    "caption": "Bir kez giriş yapın: SSH Master, FTP Masters ve diğerleri yeniden giriş istemez"
+  },
+  {
+    "file": "01-uygulamalar-gunduz.png",
+    "theme": "light",
+    "title": "Kurulu ve kurulu olmayan uygulamalar",
+    "caption": "Kurulu uygulamalar tek tıkla açılır, kurulu olmayanlar tek tıkla kurulur"
+  },
+  {
+    "file": "02-indirme-gunduz.png",
+    "theme": "light",
+    "title": "İndirme ilerlemesi",
+    "caption": "Simgenin üzerinde dairesel ilerleme (yüzde, MB); birden çok indirme aynı anda"
+  },
+  {
+    "file": "03-guncelleme-gunduz.png",
+    "theme": "light",
+    "title": "Güncelleme rozeti",
+    "caption": "Yeni sürümü olan uygulamada “Güncelleme var” rozeti ve tek tıkla Güncelle"
+  },
+  {
+    "file": "04-tepsi-gunduz.png",
+    "theme": "light",
+    "title": "Tepsi menüsü",
+    "caption": "Tepsi simgesine tek tık: kurulu uygulamalar listelenir, tıklayınca açılır"
+  },
+  {
+    "file": "05-ayarlar-genel-gunduz.png",
+    "theme": "light",
+    "title": "Ayarlar › Genel",
+    "caption": "Dil, Gece/Gündüz/Sistem teması, Windows ile başlat, tepsi ve güncellemeler"
+  },
+  {
+    "file": "06-ayarlar-hesap-gunduz.png",
+    "theme": "light",
+    "title": "Ayarlar › Hesap",
+    "caption": "Tek giriş: bir kez giriş yapın; çıkış tüm Mastertool uygulamalarından çıkarır"
+  },
+  {
+    "file": "07-ayarlar-depolama-gunduz.png",
+    "theme": "light",
+    "title": "Ayarlar › Depolama",
+    "caption": "İndirilen kurulum dosyaları; kurulumdan sonra kendiliğinden silinir"
+  },
+  {
+    "file": "08-giris-gunduz.png",
+    "theme": "light",
+    "title": "Tek giriş",
+    "caption": "Bir kez giriş yapın: SSH Master, FTP Masters ve diğerleri yeniden giriş istemez"
+  }
+]
