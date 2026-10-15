@@ -1,0 +1,98 @@
+[
+  {
+    "file": "01-uygulamalar-gece.png",
+    "theme": "dark",
+    "title": "Installed and available apps",
+    "caption": "Installed apps open with one click; the others install with one click"
+  },
+  {
+    "file": "02-indirme-gece.png",
+    "theme": "dark",
+    "title": "Download progress",
+    "caption": "Circular progress on the icon (percent, MB); several downloads at once"
+  },
+  {
+    "file": "03-guncelleme-gece.png",
+    "theme": "dark",
+    "title": "Update badge",
+    "caption": "Apps with a newer version show an “Update available” badge and one-click Update"
+  },
+  {
+    "file": "04-tepsi-gece.png",
+    "theme": "dark",
+    "title": "Tray menu",
+    "caption": "One click on the tray icon lists installed apps; click one to open it"
+  },
+  {
+    "file": "05-ayarlar-genel-gece.png",
+    "theme": "dark",
+    "title": "Settings › General",
+    "caption": "Language, Night/Day/System theme, start with Windows, tray and updates"
+  },
+  {
+    "file": "06-ayarlar-hesap-gece.png",
+    "theme": "dark",
+    "title": "Settings › Account",
+    "caption": "Single sign-on: sign in once; signing out signs out of every Mastertool app"
+  },
+  {
+    "file": "07-ayarlar-depolama-gece.png",
+    "theme": "dark",
+    "title": "Settings › Storage",
+    "caption": "Downloaded setup files; deleted automatically after setup"
+  },
+  {
+    "file": "08-giris-gece.png",
+    "theme": "dark",
+    "title": "Single sign-on",
+    "caption": "Sign in once: SSH Master, FTP Masters and the others won’t ask again"
+  },
+  {
+    "file": "01-uygulamalar-gunduz.png",
+    "theme": "light",
+    "title": "Installed and available apps",
+    "caption": "Installed apps open with one click; the others install with one click"
+  },
+  {
+    "file": "02-indirme-gunduz.png",
+    "theme": "light",
+    "title": "Download progress",
+    "caption": "Circular progress on the icon (percent, MB); several downloads at once"
+  },
+  {
+    "file": "03-guncelleme-gunduz.png",
+    "theme": "light",
+    "title": "Update badge",
+    "caption": "Apps with a newer version show an “Update available” badge and one-click Update"
+  },
+  {
+    "file": "04-tepsi-gunduz.png",
+    "theme": "light",
+    "title": "Tray menu",
+    "caption": "One click on the tray icon lists installed apps; click one to open it"
+  },
+  {
+    "file": "05-ayarlar-genel-gunduz.png",
+    "theme": "light",
+    "title": "Settings › General",
+    "caption": "Language, Night/Day/System theme, start with Windows, tray and updates"
+  },
+  {
+    "file": "06-ayarlar-hesap-gunduz.png",
+    "theme": "light",
+    "title": "Settings › Account",
+    "caption": "Single sign-on: sign in once; signing out signs out of every Mastertool app"
+  },
+  {
+    "file": "07-ayarlar-depolama-gunduz.png",
+    "theme": "light",
+    "title": "Settings › Storage",
+    "caption": "Downloaded setup files; deleted automatically after setup"
+  },
+  {
+    "file": "08-giris-gunduz.png",
+    "theme": "light",
+    "title": "Single sign-on",
+    "caption": "Sign in once: SSH Master, FTP Masters and the others won’t ask again"
+  }
+]
