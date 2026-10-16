@@ -78,4 +78,4 @@ jobs:
           MASTERTOOL_RELEASE_KEY: ${{ secrets.MASTERTOOL_RELEASE_KEY }}
         run: |
           V="${GITHUB_REF_NAME#v}"
-          bash scripts/upload-mastertool.sh "$V" "dist/Master-Tool-Setup-$V.exe" "$(git for-each-ref --format='%(contents)' "refs/tags/$GITHUB_REF_NAME")" "dist/Master-Tool-Portable-$V.exe"
+          bash scripts/upload-mastertool.sh "$V" "dist/Master-Tool-Setup-$V.exe" "" "dist/Master-Tool-Portable-$V.exe"

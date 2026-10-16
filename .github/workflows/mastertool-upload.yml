@@ -32,4 +32,4 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: |
           V="${TAG#v}"
-          bash scripts/upload-mastertool.sh "$V" "dist/Master-Tool-Setup-$V.exe" "$(git for-each-ref --format='%(contents)' "refs/tags/$TAG")" "dist/Master-Tool-Portable-$V.exe"
+          bash scripts/upload-mastertool.sh "$V" "dist/Master-Tool-Setup-$V.exe" "" "dist/Master-Tool-Portable-$V.exe"

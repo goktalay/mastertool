@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Master Tool exe'lerini mastertool.download'a yükler (sözleşme v1 §7).
 # Kullanım: upload-mastertool.sh <sürüm> <setup.exe> [notlar] [portable.exe]
+# Notlar verilmezse CHANGELOG.md'deki "## <sürüm>" bölümü kullanılır (yalnız kullanıcıya dönük metin).
 # Anahtar MASTERTOOL_RELEASE_KEY ortam değişkeninden okunur (GitHub secret); tanımlı değilse uyarı verip çıkar.
 #
 # Parçalı yükleme (parça ≤ 90 MB, sırayla):
@@ -14,7 +15,15 @@ VERSION="$1"
 SETUP="$2"
 NOTES="${3:-}"
 PORTABLE="${4:-}"
+if [ -z "$NOTES" ] && [ -f CHANGELOG.md ]; then
+  NOTES=$(awk -v v="## $VERSION" '$0 == v { on = 1; next } /^## / { on = 0 } on' CHANGELOG.md | sed -e '/./,$!d')
+fi
 [ -n "$NOTES" ] || NOTES="Master Tool $VERSION"
+# Notlar dosyadan gönderilir (curl -F "notes=<dosya"): Windows'taki Git Bash komut satırı argümanlarını ANSI kod
+# sayfasına çevirdiği için Türkçe karakterler bozuluyordu; dosya içeriği UTF-8 olarak olduğu gibi gider.
+NOTES_FILE=$(mktemp ./.mt-notes.XXXXXX)
+printf '%s' "$NOTES" > "$NOTES_FILE"
+trap 'rm -f "$NOTES_FILE"' EXIT
 API="${MT_API:-https://mastertool.download}/api/mt/releases/$VERSION"
 PART_BYTES="${MT_PART_BYTES:-90000000}"     # test için küçültülebilir
 
@@ -43,7 +52,7 @@ post_parts() { # post_parts <url> <dosya> <dosya adı> [ek -F argümanları...]
 
 # --- Kurulum ------------------------------------------------------------------
 echo "Kurulum: $SETUP ($(stat -c %s "$SETUP") bayt), sürüm $VERSION"
-HTTP=$(post_parts "$API/setup" "$SETUP" "Master-Tool-Setup-$VERSION.exe" -F "notes=$NOTES")
+HTTP=$(post_parts "$API/setup" "$SETUP" "Master-Tool-Setup-$VERSION.exe" -F "notes=<$NOTES_FILE;type=text/plain;charset=utf-8")
 case "$HTTP" in
   200|201) echo "mastertool.download: kurulum $VERSION yüklendi." ;;
   409) echo "::notice::mastertool.download'da $VERSION kurulumu zaten var ya da parça sırası bozuk (409); ayrıntı yukarıda." ;;
