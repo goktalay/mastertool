@@ -58,7 +58,11 @@ async function downloadFile({ url, token, dir, fallbackName, fetchImpl = (...a) 
     if (force || now - last >= progressMs) { last = now; onProgress({ received, total }); }
   };
 
-  const closeOut = () => new Promise((resolve) => out.end(resolve));
+  const closeOut = () => new Promise((resolve) => {
+    if (out.closed) return resolve();
+    out.once('close', resolve);
+    out.end();
+  });
   const removePart = async () => { await closeOut().catch(() => {}); try { fs.unlinkSync(part); } catch {} };
 
   try {
