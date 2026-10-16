@@ -1,20 +1,24 @@
 'use strict';
 
-// Tepsi menüsü (sözleşme v1 §5): kurulu uygulamalar (simge + ad, katalog sırası) → ayırıcı →
-// "Master Tool'u göster" → "Çıkış". Electron'dan bağımsız saf işlev; Menu.buildFromTemplate'e verilir.
+// Tepsi menüsü (sözleşme v1 §5): kurulu uygulamalar (simge + ad, katalog sırası) → ayırıcı → kurulu araçlar →
+// ayırıcı → "Master Tool'u göster" → "Çıkış". Electron'dan bağımsız saf işlev; Menu.buildFromTemplate'e verilir.
 
-const ORDER = ['sm', 'fm', 'sq', 'np', 'cv'];
+const { splitCatalog } = require('./groups');
 
 function buildTrayTemplate({ apps = [], t, iconFor = () => undefined, onOpen, onShow, onQuit }) {
-  const installed = apps
-    .filter((a) => a && a.installed && a.installed.installed)
-    .sort((a, b) => (ORDER.indexOf(a.app) + 1 || 99) - (ORDER.indexOf(b.app) + 1 || 99));
-  const items = installed.map((a) => {
-    const item = { id: `app:${a.app}`, label: a.name, click: () => onOpen(a.app) };
+  const installed = apps.filter((a) => a && a.installed && a.installed.installed);
+  const item = (a) => {
+    const it = { id: `app:${a.app}`, label: a.name, click: () => onOpen(a.app) };
     const icon = iconFor(a.app);
-    if (icon) item.icon = icon;
-    return item;
-  });
+    if (icon) it.icon = icon;
+    return it;
+  };
+  const { apps: mainApps, tools } = splitCatalog(installed);
+  const items = mainApps.map(item);
+  if (tools.length) {
+    if (items.length) items.push({ type: 'separator' });
+    items.push({ id: 'tools', label: t('mt.tools'), enabled: false }, ...tools.map(item));
+  }
   if (!items.length) items.push({ id: 'none', label: t('tray.none'), enabled: false });
   return [
     ...items,
@@ -40,4 +44,4 @@ function createClickRouter({ onSingle, onDouble, delay = 280, setTimer = setTime
   };
 }
 
-module.exports = { buildTrayTemplate, createClickRouter, ORDER };
+module.exports = { buildTrayTemplate, createClickRouter };

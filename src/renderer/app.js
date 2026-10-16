@@ -19,6 +19,10 @@ $('#tInstalled').textContent = t('mt.installed');
 $('#tAvailable').textContent = t('mt.notInstalled');
 $('#hInstalled').textContent = t('mt.installedHint');
 $('#hAvailable').textContent = t('mt.notInstalledHint');
+$('#tTools').textContent = t('mt.tools');
+$('#hTools').textContent = t('mt.toolsHint');
+$('#tToolsInstalled').textContent = t('mt.installed');
+$('#tToolsAvailable').textContent = t('mt.notInstalled');
 $('.topbar').appendChild(portalLink()); // en sağ üst köşe
 
 $('#btnSettings').onclick = () => openSettings();
@@ -53,14 +57,24 @@ function apply(st) {
 // --- Gruplar ve kutucuklar ------------------------------------------------------
 const isInstalled = (a) => !!(a.installed && a.installed.installed);
 
+// Bölümler katalogdaki "group" alanından: uygulamalar Kurulu / Kurulu değil, araçlar ayrı "Araçlar" bölümünde
 function render() {
-  const inst = state.apps.filter(isInstalled);
-  const avail = state.apps.filter((a) => !isInstalled(a));
-  $('#stats').textContent = t('mt.count', { installed: inst.length, total: state.apps.length });
+  const { apps, tools } = MTGroups.splitCatalog(state.apps);
+  const inst = apps.filter(isInstalled);
+  const avail = apps.filter((a) => !isInstalled(a));
+  $('#stats').textContent = t('mt.count', { installed: state.apps.filter(isInstalled).length, total: state.apps.length });
   $('#cInstalled').textContent = inst.length;
   $('#cAvailable').textContent = avail.length;
   fill($('#installed'), inst, t('mt.emptyInstalled'));
   fill($('#available'), avail, t('mt.allInstalled'));
+  const tInst = tools.filter(isInstalled);
+  const tAvail = tools.filter((a) => !isInstalled(a));
+  $('#toolsGroup').classList.toggle('hidden', !tools.length);
+  $('#cTools').textContent = tools.length;
+  $('#toolsInstalledWrap').classList.toggle('hidden', !tInst.length);
+  $('#toolsAvailableWrap').classList.toggle('hidden', !tAvail.length);
+  fill($('#toolsInstalled'), tInst, '');
+  fill($('#toolsAvailable'), tAvail, '');
   $('#offlineBar').classList.toggle('hidden', !state.offline);
   $('#offlineBar').innerHTML = `${icon('cloudOff')}<span>${esc(t('mt.offline'))}</span>`;
   renderAccountChip();
@@ -70,6 +84,15 @@ function fill(el, apps, emptyText) {
   el.innerHTML = '';
   if (!apps.length) { el.appendChild(h(`<div class="empty-note">${esc(emptyText)}</div>`)); return; }
   for (const a of apps) el.appendChild(tile(a));
+}
+
+// Bilinen uygulamaların açıklaması sözlükten; yeni araçlarda (sözlükte yoksa) katalogdaki açıklama ya da boş
+function appDesc(a) {
+  const key = `mt.desc.${a.app}`;
+  const s = t(key);
+  if (s !== key) return s;
+  const d = a.description;
+  return (d && typeof d === 'object' ? d[LANG] || d.en : d) || '';
 }
 
 function tile(a) {
@@ -86,7 +109,7 @@ function tile(a) {
     </div>
     <div class="t-name">${esc(a.name)}</div>
     <div class="t-sub"></div>
-    <div class="t-desc">${esc(t(`mt.desc.${a.app}`))}</div>
+    <div class="t-desc">${esc(appDesc(a))}</div>
     <div class="t-act"></div>
   </div>`);
   el.addEventListener('click', (e) => { if (!e.target.closest('.t-act button')) onTileClick(a.app); });
@@ -101,7 +124,7 @@ function updateTile(a, el = document.querySelector(`.tile[data-app="${a.app}"]`)
   const job = jobs[a.app] || null;
   const inst = isInstalled(a);
   const disabled = !inst && a.license && a.license !== 'AKTIF';
-  const noRelease = !inst && !disabled && state.fresh && !a.release;
+  const noRelease = !inst && !disabled && (state.fresh || state.known) && !a.release; // "Yakında": tıklanamaz
   el.className = `tile ${inst ? 'installed' : 'available'}${disabled ? ' disabled' : ''}${noRelease ? ' unreleased' : ''}${job ? ` busy ${job.phase}` : ''}${a.updateAvailable ? ' has-update' : ''}`;
 
   // İlerleme halkası: yüzde + MB
@@ -163,7 +186,7 @@ async function onTileClick(code) {
     return;
   }
   if (a.license && a.license !== 'AKTIF') { toast(t('mt.errAppDisabled', { name: a.name }), { type: 'err', timeout: 7000 }); return; }
-  if (state.fresh && !a.release) { toast(t('mt.errNoRelease', { name: a.name }), { type: 'err' }); return; }
+  if ((state.fresh || state.known) && !a.release) return; // Yakında
   window.api.installApp(code);
 }
 
@@ -176,7 +199,7 @@ function tileMenu(code, x, y) {
   contextMenu(x, y, [
     inst && { label: t('mt.open'), icon: 'play', action: () => onTileClick(code), disabled: !!job },
     inst && a.updateAvailable && { label: t('mt.update'), icon: 'download', action: () => window.api.installApp(code), disabled: !!job },
-    !inst && { label: t('mt.install'), icon: 'download', action: () => onTileClick(code), disabled: !!job || blocked || (state.fresh && !a.release) },
+    !inst && { label: t('mt.install'), icon: 'download', action: () => onTileClick(code), disabled: !!job || blocked || ((state.fresh || state.known) && !a.release) },
     job && job.phase === 'download' && { label: t('mt.cancelOk'), icon: 'x', danger: true, action: () => window.api.cancelInstall(code) },
     '-',
     { label: t('mt.visitSite'), icon: 'globe', action: () => window.api.openSite(code) },

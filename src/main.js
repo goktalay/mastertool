@@ -16,6 +16,7 @@ const { detectAll, resolveInstalled, readUninstallEntries } = require('./detect'
 const { createInstaller } = require('./installs');
 const { downloadFile, listDownloads, clearDownloads } = require('./downloader');
 const { buildTrayTemplate, createClickRouter } = require('./tray-menu');
+const { groupOf } = require('./groups');
 
 const ROOT = path.join(__dirname, '..');
 const ICON = path.join(ROOT, 'build', 'icon.png');
@@ -78,11 +79,12 @@ const DEFAULT_APPS = [
   { app: 'sq', name: 'SQL Master', site: 'https://sqlmaster.app/' },
   { app: 'np', name: 'Notepad Master', site: 'https://notepadmaster.com/' },
   { app: 'cv', name: 'Convert Master', site: 'https://convertmaster.app/' },
-].map((a) => ({ ...a, exe: `${a.name}.exe`, install_dir: `Mastertool\\${a.name}`, icon_png: `/brand/${a.app}.png`, icon_svg: `/brand/${a.app}.svg`, license: null, release: null }));
+].map((a) => ({ ...a, group: 'apps', exe: `${a.name}.exe`, install_dir: `Mastertool\\${a.name}`, icon_png: `/brand/${a.app}.png`, icon_svg: `/brand/${a.app}.svg`, license: null, release: null }));
 
 const catalogPath = () => path.join(app.getPath('userData'), 'catalog.json');
 let catalog = { apps: DEFAULT_APPS, launcher: { name: 'Master Tool', release: null } };
 let catalogFresh = false;   // bu açılışta sunucudan alındı mı
+let catalogKnown = false;   // sunucudan en az bir kez alındı (önbellek dahil): release null = gerçekten sürüm yok
 let offline = false;
 let installed = {};         // app -> { installed, exePath, dir, version, source }
 let scanning = false;
@@ -90,7 +92,7 @@ let scanning = false;
 function loadCatalogCache() {
   try {
     const c = JSON.parse(fs.readFileSync(catalogPath(), 'utf8'));
-    if (Array.isArray(c.apps) && c.apps.length) catalog = c;
+    if (Array.isArray(c.apps) && c.apps.length) { catalog = c; catalogKnown = true; }
   } catch { /* ilk açılış */ }
 }
 
@@ -101,6 +103,7 @@ async function refreshCatalog() {
     if (Array.isArray(c.apps)) {
       catalog = { apps: c.apps, launcher: c.launcher || catalog.launcher };
       catalogFresh = true;
+      catalogKnown = true;
       offline = false;
       fs.writeFileSync(catalogPath(), JSON.stringify(catalog), 'utf8');
       refreshIcons();
@@ -148,13 +151,14 @@ function iconDataUrl(code) {
   const svg = iconFile(code, 'svg');
   if (svg) return `data:image/svg+xml;base64,${fs.readFileSync(svg).toString('base64')}`;
   const png = iconFile(code, 'png');
-  return png ? `data:image/png;base64,${fs.readFileSync(png).toString('base64')}` : '';
+  if (png) return `data:image/png;base64,${fs.readFileSync(png).toString('base64')}`;
+  return code === 'mt' ? '' : iconDataUrl('mt'); // simgesi henüz alınamamış yeni araç: Mastertool simgesi
 }
 
 const trayIcons = new Map();
 function trayIconFor(code) {
   if (!trayIcons.has(code)) {
-    const png = iconFile(code, 'png');
+    const png = iconFile(code, 'png') || iconFile('mt', 'png');
     trayIcons.set(code, png ? nativeImage.createFromPath(png).resize({ width: 16, height: 16, quality: 'best' }) : undefined);
   }
   return trayIcons.get(code);
@@ -187,7 +191,7 @@ function appView(a) {
   const inst = installed[a.app] || { installed: false };
   const rel = a.release || null;
   return {
-    app: a.app, name: a.name, site: a.site, license: a.license, release: rel,
+    app: a.app, name: a.name, group: groupOf(a), site: a.site, license: a.license, release: rel,
     installed: inst,
     updateAvailable: !!(inst.installed && inst.version && rel && rel.version && compareVersions(rel.version, inst.version) > 0),
     icon: iconDataUrl(a.app),
@@ -201,6 +205,7 @@ function viewState() {
     launcher: catalog.launcher,
     offline,
     fresh: catalogFresh,
+    known: catalogKnown,
     scanned: lastScan > 0,
     account: account ? account.state() : { loggedIn: false },
   };
@@ -312,6 +317,7 @@ function installApp(code) {
   const a = catalog.apps.find((x) => x.app === code);
   if (!a || !account.isLoggedIn()) return { ok: false };
   if (a.license && a.license !== 'AKTIF') { sendToast('mt.errAppDisabled', { name: a.name }, 'err'); return { ok: false, code: 'app_disabled' }; }
+  if (catalogKnown && !a.release) return { ok: false, code: 'no_release' }; // "Yakında"
   const inst = installed[code];
   const minVersion = a.release && a.release.version;
   installer.start({ ...a, wasInstalled: !!(inst && inst.installed) }, { minVersion });
@@ -435,7 +441,7 @@ let trayMenu = null;
 
 function trayTemplate() {
   return buildTrayTemplate({
-    apps: catalog.apps.map((a) => ({ app: a.app, name: a.name, installed: installed[a.app] })),
+    apps: catalog.apps.map((a) => ({ app: a.app, name: a.name, group: a.group, installed: installed[a.app] })),
     t,
     iconFor: trayIconFor,
     onOpen: (code) => openApp(code),
