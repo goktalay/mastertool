@@ -1,7 +1,7 @@
 {
   "name": "master-tool",
   "productName": "Master Tool",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Mastertool uygulamalarını tek yerden kurar, açar ve günceller; tek girişle tüm uygulamalarda oturum açar",
   "main": "src/main.js",
   "author": "Mastertool",
