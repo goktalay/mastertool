@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   upload:
@@ -24,7 +25,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
-        run: gh release download "$TAG" -p 'Master-Tool-Setup-*.exe' -p 'Master-Tool-Portable-*.exe' -D dist
+        run: |
+          if ! gh release download "$TAG" -p 'Master-Tool-Setup-*.exe' -p 'Master-Tool-Portable-*.exe' -D dist; then
+            echo "Release '$TAG' bulunamadı; etiketin başarılı Release iş akışı artifact'i deneniyor."
+            RUN_ID=$(gh run list --workflow release.yml --branch "$TAG" --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+            if [ -z "$RUN_ID" ]; then
+              echo "::error::'$TAG' için ne Release ne de başarılı bir derleme (Release iş akışı) bulundu. Önce etiketi gönderip derlemenin bitmesini bekleyin."
+              exit 1
+            fi
+            gh run download "$RUN_ID" -n Master-Tool-windows -D dist
+          fi
 
       - name: mastertool.download'a yükle
         env:
