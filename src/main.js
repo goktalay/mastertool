@@ -100,7 +100,7 @@ function loadCatalogCache() {
 async function refreshCatalog() {
   if (!account.isLoggedIn()) return;
   try {
-    const c = await account.authed('GET', '/api/mt/apps');
+    const c = await account.authed('GET', `/api/mt/apps?v=${encodeURIComponent(app.getVersion())}`) // v: sunucu eski istemcilere tanımadıkları kayıtları (kind:"web") göndermez;
     if (Array.isArray(c.apps)) {
       catalog = { apps: normalizeCatalog(c.apps), launcher: c.launcher || catalog.launcher };
       catalogFresh = true;
