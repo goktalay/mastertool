@@ -58,3 +58,15 @@ test('yalnız araç kuruluysa baştaki ayırıcı olmaz', () => {
   const tpl = buildTrayTemplate({ apps: [{ app: 'fs', name: 'File Search', group: 'tools', installed: { installed: true } }], t, onOpen() {}, onShow() {}, onQuit() {} });
   assert.deepEqual(tpl.map((i) => i.label || i.type), ['Araçlar', 'File Search', 'separator', 'Master Tool’u göster', 'Çıkış']);
 });
+
+test('web kayıtları (oyunlar) kurulum gerektirmeden "Oyunlar" başlığı altında', () => {
+  const list = [
+    { app: 'sm', name: 'SSH Master', group: 'apps', installed: { installed: true } },
+    { app: 'vf', name: 'VOLFAI', group: 'games', kind: 'web', url: 'https://mastertool.download/oyunlar/volfai/' },
+  ];
+  const opened = [];
+  const tpl = buildTrayTemplate({ apps: list, t, onOpen: (c) => opened.push(c), onShow() {}, onQuit() {} });
+  assert.deepEqual(tpl.map((i) => i.label || i.type), ['SSH Master', 'separator', 'Oyunlar', 'VOLFAI', 'separator', 'Master Tool’u göster', 'Çıkış']);
+  tpl[3].click();
+  assert.deepEqual(opened, ['vf']);
+});

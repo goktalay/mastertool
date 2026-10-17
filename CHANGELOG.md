@@ -1,5 +1,10 @@
 # Değişiklikler
 
+## 1.2.0
+- Oyunlar bölümü: tarayıcıda oynanan oyunlar (ilk olarak VOLFAI) ayrı bir bölümde gösterilir; kurulum gerekmez,
+  tıklayınca varsayılan tarayıcıda Mastertool hesabınızla açılır.
+- Tepside oyunlar "Oyunlar" başlığı altında.
+
 ## 1.1.0
 - Araçlar bölümü: Mastertool araçları (IP Tools, File Search, Quick Preview ve sonra eklenecekler) uygulamaların altında
   ayrı bir bölümde, kendi içinde Kurulu / Kurulu değil olarak gösterilir. Kart, indirme, kurulum ve açma uygulamalarla aynı.

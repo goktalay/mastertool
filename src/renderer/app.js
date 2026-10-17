@@ -23,6 +23,8 @@ $('#tTools').textContent = t('mt.tools');
 $('#hTools').textContent = t('mt.toolsHint');
 $('#tToolsInstalled').textContent = t('mt.installed');
 $('#tToolsAvailable').textContent = t('mt.notInstalled');
+$('#tGames').textContent = t('mt.games');
+$('#hGames').textContent = t('mt.gamesHint');
 $('.topbar').appendChild(portalLink()); // en sağ üst köşe
 
 $('#btnSettings').onclick = () => openSettings();
@@ -59,10 +61,11 @@ const isInstalled = (a) => !!(a.installed && a.installed.installed);
 
 // Bölümler katalogdaki "group" alanından: uygulamalar Kurulu / Kurulu değil, araçlar ayrı "Araçlar" bölümünde
 function render() {
-  const { apps, tools } = MTGroups.splitCatalog(state.apps);
+  const { apps, tools, games } = MTGroups.splitCatalog(state.apps);
   const inst = apps.filter(isInstalled);
   const avail = apps.filter((a) => !isInstalled(a));
-  $('#stats').textContent = t('mt.count', { installed: state.apps.filter(isInstalled).length, total: state.apps.length });
+  const installable = state.apps.filter((a) => a.kind !== 'web');
+  $('#stats').textContent = t('mt.count', { installed: installable.filter(isInstalled).length, total: installable.length });
   $('#cInstalled').textContent = inst.length;
   $('#cAvailable').textContent = avail.length;
   fill($('#installed'), inst, t('mt.emptyInstalled'));
@@ -75,6 +78,10 @@ function render() {
   $('#toolsAvailableWrap').classList.toggle('hidden', !tAvail.length);
   fill($('#toolsInstalled'), tInst, '');
   fill($('#toolsAvailable'), tAvail, '');
+  // Oyunlar (web kayıtları): kurulmaz, tıklayınca tarayıcıda açılır
+  $('#gamesGroup').classList.toggle('hidden', !games.length);
+  $('#cGames').textContent = games.length;
+  fill($('#games'), games, '');
   $('#offlineBar').classList.toggle('hidden', !state.offline);
   $('#offlineBar').innerHTML = `${icon('cloudOff')}<span>${esc(t('mt.offline'))}</span>`;
   renderAccountChip();
@@ -121,6 +128,14 @@ function tile(a) {
 
 function updateTile(a, el = document.querySelector(`.tile[data-app="${a.app}"]`)) {
   if (!el) return;
+  if (a.kind === 'web') {
+    el.className = 'tile web';
+    const sub = el.querySelector('.t-sub');
+    sub.innerHTML = `${icon('globe')}${esc(t('mt.inBrowser'))}`;
+    sub.className = 't-sub';
+    el.title = t('mt.inBrowser');
+    return;
+  }
   const job = jobs[a.app] || null;
   const inst = isInstalled(a);
   const disabled = !inst && a.license && a.license !== 'AKTIF';
@@ -170,6 +185,7 @@ function updateTile(a, el = document.querySelector(`.tile[data-app="${a.app}"]`)
 async function onTileClick(code) {
   const a = state.apps.find((x) => x.app === code);
   if (!a) return;
+  if (a.kind === 'web') { window.api.openApp(code); return; } // tarayıcıda açılır
   const job = jobs[code];
   if (job) {
     if (job.phase !== 'download') return;
@@ -193,6 +209,13 @@ async function onTileClick(code) {
 function tileMenu(code, x, y) {
   const a = state.apps.find((v) => v.app === code);
   if (!a) return;
+  if (a.kind === 'web') {
+    contextMenu(x, y, [
+      { label: t('mt.open'), icon: 'globe', action: () => window.api.openApp(code) },
+      a.site && { label: t('mt.visitSite'), icon: 'open', action: () => window.api.openSite(code) },
+    ]);
+    return;
+  }
   const job = jobs[code];
   const inst = isInstalled(a);
   const blocked = a.license && a.license !== 'AKTIF';

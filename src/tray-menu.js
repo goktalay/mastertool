@@ -1,23 +1,25 @@
 'use strict';
 
 // Tepsi menüsü (sözleşme v1 §5): kurulu uygulamalar (simge + ad, katalog sırası) → ayırıcı → kurulu araçlar →
-// ayırıcı → "Master Tool'u göster" → "Çıkış". Electron'dan bağımsız saf işlev; Menu.buildFromTemplate'e verilir.
+// ayırıcı → oyunlar (web) → ayırıcı → "Master Tool'u göster" → "Çıkış". Electron'dan bağımsız saf işlev; Menu.buildFromTemplate'e verilir.
 
-const { splitCatalog } = require('./groups');
+const { splitCatalog, isWeb } = require('./groups');
 
 function buildTrayTemplate({ apps = [], t, iconFor = () => undefined, onOpen, onShow, onQuit }) {
-  const installed = apps.filter((a) => a && a.installed && a.installed.installed);
+  // Kurulabilenler yalnız kuruluysa listelenir; web kayıtları (Oyunlar) her zaman açılabilir
+  const installed = apps.filter((a) => a && (isWeb(a) || (a.installed && a.installed.installed)));
   const item = (a) => {
     const it = { id: `app:${a.app}`, label: a.name, click: () => onOpen(a.app) };
     const icon = iconFor(a.app);
     if (icon) it.icon = icon;
     return it;
   };
-  const { apps: mainApps, tools } = splitCatalog(installed);
+  const { apps: mainApps, tools, games } = splitCatalog(installed);
   const items = mainApps.map(item);
-  if (tools.length) {
+  for (const [id, list] of [['tools', tools], ['games', games]]) {
+    if (!list.length) continue;
     if (items.length) items.push({ type: 'separator' });
-    items.push({ id: 'tools', label: t('mt.tools'), enabled: false }, ...tools.map(item));
+    items.push({ id, label: t(`mt.${id}`), enabled: false }, ...list.map(item));
   }
   if (!items.length) items.push({ id: 'none', label: t('tray.none'), enabled: false });
   return [

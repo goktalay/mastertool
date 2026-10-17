@@ -16,7 +16,7 @@ const { detectAll, resolveInstalled, readUninstallEntries } = require('./detect'
 const { createInstaller } = require('./installs');
 const { downloadFile, listDownloads, clearDownloads } = require('./downloader');
 const { buildTrayTemplate, createClickRouter } = require('./tray-menu');
-const { groupOf } = require('./groups');
+const { groupOf, isWeb, normalizeCatalog } = require('./groups');
 
 const ROOT = path.join(__dirname, '..');
 const ICON = path.join(ROOT, 'build', 'icon.png');
@@ -92,7 +92,8 @@ let scanning = false;
 function loadCatalogCache() {
   try {
     const c = JSON.parse(fs.readFileSync(catalogPath(), 'utf8'));
-    if (Array.isArray(c.apps) && c.apps.length) { catalog = c; catalogKnown = true; }
+    const apps = normalizeCatalog(c.apps);
+    if (apps.length) { catalog = { ...c, apps }; catalogKnown = true; }
   } catch { /* ilk açılış */ }
 }
 
@@ -101,7 +102,7 @@ async function refreshCatalog() {
   try {
     const c = await account.authed('GET', '/api/mt/apps');
     if (Array.isArray(c.apps)) {
-      catalog = { apps: c.apps, launcher: c.launcher || catalog.launcher };
+      catalog = { apps: normalizeCatalog(c.apps), launcher: c.launcher || catalog.launcher };
       catalogFresh = true;
       catalogKnown = true;
       offline = false;
@@ -172,7 +173,7 @@ async function rescan() {
   if (scanning) return;
   scanning = true;
   try {
-    installed = await detectAll(catalog.apps);
+    installed = await detectAll(catalog.apps.filter((a) => !isWeb(a))); // web kayıtları kurulmaz
     lastScan = Date.now();
   } finally {
     scanning = false;
@@ -191,7 +192,8 @@ function appView(a) {
   const inst = installed[a.app] || { installed: false };
   const rel = a.release || null;
   return {
-    app: a.app, name: a.name, group: groupOf(a), site: a.site, license: a.license, release: rel,
+    app: a.app, name: a.name, group: groupOf(a), kind: isWeb(a) ? 'web' : 'app', url: isWeb(a) ? a.url : null,
+    description: a.description || null, site: a.site, license: a.license, release: rel,
     installed: inst,
     updateAvailable: !!(inst.installed && inst.version && rel && rel.version && compareVersions(rel.version, inst.version) > 0),
     icon: iconDataUrl(a.app),
@@ -302,9 +304,20 @@ function friendlyCode(r) {
   return r.message && r.message !== r.code ? r.message : r.code;
 }
 
+// Web kaydı (ör. oyun): varsayılan tarayıcıda, uygulamanın diliyle ve o anki temasıyla açılır
+function openWebEntry(a) {
+  const u = new URL(a.url);
+  if (u.protocol !== 'https:') return { ok: false };
+  u.searchParams.set('lang', currentLang());
+  u.searchParams.set('theme', themeParam());
+  shell.openExternal(u.toString());
+  return { ok: true, web: true };
+}
+
 async function openApp(code) {
   const a = catalog.apps.find((x) => x.app === code);
   if (!a) return { ok: false };
+  if (isWeb(a)) return openWebEntry(a);
   let inst = installed[code];
   if (!inst || !inst.installed || !fs.existsSync(inst.exePath)) inst = await detectOne(a);
   if (!inst.installed) { broadcast(); updateTrayMenu(); return { ok: false, code: 'not_installed' }; }
@@ -315,6 +328,7 @@ async function openApp(code) {
 
 function installApp(code) {
   const a = catalog.apps.find((x) => x.app === code);
+  if (a && isWeb(a)) return openWebEntry(a); // kurulmaz, açılır
   if (!a || !account.isLoggedIn()) return { ok: false };
   if (a.license && a.license !== 'AKTIF') { sendToast('mt.errAppDisabled', { name: a.name }, 'err'); return { ok: false, code: 'app_disabled' }; }
   if (catalogKnown && !a.release) return { ok: false, code: 'no_release' }; // "Yakında"
@@ -441,7 +455,7 @@ let trayMenu = null;
 
 function trayTemplate() {
   return buildTrayTemplate({
-    apps: catalog.apps.map((a) => ({ app: a.app, name: a.name, group: a.group, installed: installed[a.app] })),
+    apps: catalog.apps.map((a) => ({ app: a.app, name: a.name, group: a.group, kind: a.kind, url: a.url, installed: installed[a.app] })),
     t,
     iconFor: trayIconFor,
     onOpen: (code) => openApp(code),
