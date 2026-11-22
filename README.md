@@ -1,6 +1,6 @@
 # Master Tool
 
-Mastertool ailesinin Windows masaüstü başlatıcısı. SSH Master, FTP Masters, SQL Master, Notepad Master ve Convert Master'ı
+Mastertool ailesinin Windows masaüstü başlatıcısı. SSH Master, FTP Masters, SQL Master, Notepad Master, Convert Master ve Video Master'ı
 **kurulu** ve **kurulu değil** diye iki grupta gösterir:
 
 - Kurulu uygulamaya tıklayınca uygulama açılır (açıksa penceresi öne gelir). Yeni sürüm varsa simgede rozet ve **Güncelle** düğmesi.

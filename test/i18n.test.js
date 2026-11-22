@@ -31,7 +31,7 @@ test('kodda kullanılan her anahtar sözlükte var', () => {
     for (const m of src.matchAll(/\bt\('([a-z]+\.[A-Za-z.]+)'/g)) used.add(m[1]);
     for (const m of src.matchAll(/'((?:auth|mt|tray|set|acct|update|about|common)\.[A-Za-z]+)'/g)) used.add(m[1]);
   }
-  for (const code of ['sm', 'fm', 'sq', 'np', 'cv']) used.add(`mt.desc.${code}`);
+  for (const code of ['sm', 'fm', 'sq', 'np', 'cv', 'vm']) used.add(`mt.desc.${code}`);
   for (const k of used) assert.ok(k in I18N.STRINGS.tr, k);
 });
 

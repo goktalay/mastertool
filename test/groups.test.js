@@ -22,6 +22,7 @@ test('bilinmeyen group değeri ve group alanı olmayan yeni kod "Araçlar"a dü�
 
 test('group alanı olmayan eski katalogda bilinen uygulamalar "apps"', () => {
   assert.equal(groupOf({ app: 'cv' }), 'apps');
+  assert.equal(groupOf({ app: 'vm' }), 'apps');
   assert.deepEqual(splitCatalog(null), { apps: [], tools: [], games: [] });
 });
 
