@@ -26,6 +26,7 @@ const APPS = [
   { app: 'sq', name: 'SQL Master', site: 'https://sqlmaster.app/', version: '0.1.0', size: 126.1 },
   { app: 'np', name: 'Notepad Master', site: 'https://notepadmaster.com/', version: '1.1.0', size: 84.4 },
   { app: 'cv', name: 'Convert Master', site: 'https://convertmaster.app/', version: '1.0.0', size: 112.1 },
+  { app: 'vm', name: 'Video Master', site: 'https://videomaster.app/', version: '1.0.0', size: 118.0 },
 ];
 const SAMPLE = {
   tr: { email: 'ornek@example.com', name: 'Örnek Kullanıcı', winUser: 'Ornek', password: 'örnekşifre', locale: 'tr-TR' },

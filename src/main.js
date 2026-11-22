@@ -79,6 +79,7 @@ const DEFAULT_APPS = [
   { app: 'sq', name: 'SQL Master', site: 'https://sqlmaster.app/' },
   { app: 'np', name: 'Notepad Master', site: 'https://notepadmaster.com/' },
   { app: 'cv', name: 'Convert Master', site: 'https://convertmaster.app/' },
+  { app: 'vm', name: 'Video Master', site: 'https://videomaster.app/' },
 ].map((a) => ({ ...a, group: 'apps', exe: `${a.name}.exe`, install_dir: `Mastertool\\${a.name}`, icon_png: `/brand/${a.app}.png`, icon_svg: `/brand/${a.app}.svg`, license: null, release: null }));
 
 const catalogPath = () => path.join(app.getPath('userData'), 'catalog.json');

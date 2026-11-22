@@ -6,7 +6,7 @@
 (function (root) {
   'use strict';
 
-  const APP_CODES = ['sm', 'fm', 'sq', 'np', 'cv'];
+  const APP_CODES = ['sm', 'fm', 'sq', 'np', 'cv', 'vm'];
   const GROUPS = ['apps', 'tools', 'games'];
 
   const isWeb = (a) => !!(a && a.kind === 'web' && /^https:\/\//i.test(String(a.url || '')));

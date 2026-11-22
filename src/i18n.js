@@ -120,6 +120,7 @@
     'mt.desc.sq': 'Veritabanı istemcisi ve sorgu düzenleyici',
     'mt.desc.np': 'Kod ve metin düzenleyici',
     'mt.desc.cv': 'Video, resim ve ses dönüştürücü',
+    'mt.desc.vm': 'Ağ video akışı görüntüleyici, çözümleyici ve kaydedici (RTSP, RTP, SRT…)',
 
     'tray.show': 'Master Tool’u göster', 'tray.quit': 'Çıkış', 'tray.none': 'Kurulu uygulama yok',
     'tray.balloonTitle': 'Master Tool arka planda çalışıyor',
@@ -229,6 +230,7 @@
     'mt.desc.sq': 'Database client and query editor',
     'mt.desc.np': 'Code and text editor',
     'mt.desc.cv': 'Video, image and audio converter',
+    'mt.desc.vm': 'Network video stream viewer, analyzer and recorder (RTSP, RTP, SRT…)',
 
     'tray.show': 'Show Master Tool', 'tray.quit': 'Quit', 'tray.none': 'No installed apps',
     'tray.balloonTitle': 'Master Tool is running in the background',
@@ -338,6 +340,7 @@
     'mt.desc.sq': 'Client de bases de données et éditeur de requêtes',
     'mt.desc.np': 'Éditeur de code et de texte',
     'mt.desc.cv': 'Convertisseur vidéo, image et audio',
+    'mt.desc.vm': 'Lecteur, analyseur et enregistreur de flux vidéo réseau (RTSP, RTP, SRT…)',
 
     'tray.show': 'Afficher Master Tool', 'tray.quit': 'Quitter', 'tray.none': 'Aucune application installée',
     'tray.balloonTitle': 'Master Tool fonctionne en arrière-plan',
@@ -447,6 +450,7 @@
     'mt.desc.sq': 'Datenbank-Client und Abfrage-Editor',
     'mt.desc.np': 'Code- und Texteditor',
     'mt.desc.cv': 'Video-, Bild- und Audiokonverter',
+    'mt.desc.vm': 'Betrachter, Analysator und Rekorder für Netzwerk-Videostreams (RTSP, RTP, SRT…)',
 
     'tray.show': 'Master Tool anzeigen', 'tray.quit': 'Beenden', 'tray.none': 'Keine installierten Apps',
     'tray.balloonTitle': 'Master Tool läuft im Hintergrund',
@@ -556,6 +560,7 @@
     'mt.desc.sq': 'Cliente de bases de datos y editor de consultas',
     'mt.desc.np': 'Editor de código y texto',
     'mt.desc.cv': 'Conversor de vídeo, imagen y audio',
+    'mt.desc.vm': 'Visor, analizador y grabador de flujos de vídeo en red (RTSP, RTP, SRT…)',
 
     'tray.show': 'Mostrar Master Tool', 'tray.quit': 'Salir', 'tray.none': 'No hay aplicaciones instaladas',
     'tray.balloonTitle': 'Master Tool se ejecuta en segundo plano',
@@ -665,6 +670,7 @@
     'mt.desc.sq': 'عميل قواعد بيانات ومحرّر استعلامات',
     'mt.desc.np': 'محرّر نصوص وشيفرات',
     'mt.desc.cv': 'محوّل الفيديو والصور والصوت',
+    'mt.desc.vm': 'عارض ومحلّل ومسجّل لبثّ الفيديو عبر الشبكة (RTSP، RTP، SRT…)',
 
     'tray.show': 'إظهار Master Tool', 'tray.quit': 'خروج', 'tray.none': 'لا توجد تطبيقات مثبّتة',
     'tray.balloonTitle': 'يعمل Master Tool في الخلفية',
@@ -774,6 +780,7 @@
     'mt.desc.sq': '数据库客户端和查询编辑器',
     'mt.desc.np': '代码和文本编辑器',
     'mt.desc.cv': '视频、图片和音频转换器',
+    'mt.desc.vm': '网络视频流查看、分析与录制工具（RTSP、RTP、SRT…）',
 
     'tray.show': '显示 Master Tool', 'tray.quit': '退出', 'tray.none': '没有已安装的应用',
     'tray.balloonTitle': 'Master Tool 正在后台运行',
@@ -883,6 +890,7 @@
     'mt.desc.sq': 'Клиент баз данных и редактор запросов',
     'mt.desc.np': 'Редактор кода и текста',
     'mt.desc.cv': 'Конвертер видео, изображений и аудио',
+    'mt.desc.vm': 'Просмотр, анализ и запись сетевых видеопотоков (RTSP, RTP, SRT…)',
 
     'tray.show': 'Показать Master Tool', 'tray.quit': 'Выход', 'tray.none': 'Нет установленных приложений',
     'tray.balloonTitle': 'Master Tool работает в фоне',

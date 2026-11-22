@@ -1,5 +1,9 @@
 # Değişiklikler
 
+## 1.3.0
+- Video Master: ağ video akışı görüntüleyici (RTSP, RTP, UDP, SRT, RTMP, HLS) uygulamalar arasına eklendi; diğer
+  uygulamalar gibi Master Tool'dan indirilir, kurulur, güncellenir ve açılır (`C:\Program Files\Mastertool\Video Master`).
+
 ## 1.2.0
 - Oyunlar bölümü: tarayıcıda oynanan oyunlar (ilk olarak VOLFAI) ayrı bir bölümde gösterilir; kurulum gerekmez,
   tıklayınca varsayılan tarayıcıda Mastertool hesabınızla açılır.
